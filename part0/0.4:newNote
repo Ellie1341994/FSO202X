@@ -1,0 +1,15 @@
+title Depiction of a user creating a new note
+
+User->Web Browser: Scrolls down, writes a note and clicks on 'Save'
+note over Web Browser: at page https://studies.cs.helsinki.fi/exampleapp/notes
+Web Browser->Server: H.T.T.P POST https://studies.cs.helsinki.fi/exampleapp/new_note
+Server->Web Browser: Responds with a 302 Redirect
+Web Browser->Server: H.T.T.P GET https://studies.cs.helsinki.fi/exampleapp/notes
+Server->Web Browser: Responds with a 304 that avoids notes (html) file retransmission
+Web Browser->Server: H.T.T.P GET https://studies.cs.helsinki.fi/exampleapp/main.css
+Server->Web Browser: Responds with a 304 that avoids main.css file retransmission
+Web Browser->Server: H.T.T.P GET https://studies.cs.helsinki.fi/exampleapp/main.js
+Server->Web Browser: Responds with a 304 that avoids main.js file retransmission
+Web Browser->Server: H.T.T.P GET https://studies.cs.helsinki.fi/exampleapp/data.json
+Server->Web Browser: Responds with a 200 OK
+Web Browser->User: Shows the last saved note

@@ -1,0 +1,11 @@
+title Depiction of a user using the notes spa
+User->Web Browser: Scrolls down, writes a new note and clicks on 'save'
+note over Web Browser:
+A custom form submittion handler written in spa.js executes
+The handlder programmatically creates the new note
+and renderes all of them calling redrawNotes function
+Then it calls SendToServer function which communicates with the server
+end note
+Web Browser->User: Shows user the notes
+Web Browser->Server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_notes_spa
+Server-->Web Browser: returns 201 RESOURCE CREATED

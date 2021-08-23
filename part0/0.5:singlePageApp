@@ -1,0 +1,19 @@
+title Depiction of a user going onto the spa notes app
+User->Web Browser: Goes to https://studies.cs.helsinki.fi/exampleapp/spa by
+Web Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa
+Server-->Web Browser: spa file with html code
+Web Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+Server-->Web Browser: main.css file
+Web Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+Server-->Web Browser: main.js file
+Web Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+
+note over Web Browser:
+Web browser starts executing js-code
+that requests JSON data from server
+end note
+
+Web Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+Server-->Web Browser: [{ content: "HTML is easy", date: "2019-05-23" }, ...]
+
+Web Browser->User: Displays notes to the user
