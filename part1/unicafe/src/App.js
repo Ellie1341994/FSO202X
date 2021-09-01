@@ -3,7 +3,7 @@ import React, { useState } from "react";
 const baseFeedbackData = { good: 0, bad: 0, neutral: 0 };
 
 const Title = ({ text }) => <h1>{text}</h1>;
-const Feedback = ({ type, value }) => <p>{type + ": " + value}</p>;
+const StatisticLine = ({ text, value }) => <p>{text + ": " + value}</p>;
 const Statistics = ({ data }) => {
   const all = data.good + data.bad + data.neutral;
   const hasStats = Boolean(all);
@@ -14,12 +14,12 @@ const Statistics = ({ data }) => {
       <Title text="Statitics" />
       {hasStats ? (
         <>
-          <Feedback type="Good" value={data.good} />
-          <Feedback type="Bad" value={data.bad} />
-          <Feedback type="Neutral" value={data.neutral} />
-          <Feedback type="All" value={all} />
-          <Feedback type="Average" value={average} />
-          <Feedback type="Positive" value={positivePortion} />
+          <StatisticLine text="Good" value={data.good} />
+          <StatisticLine text="Bad" value={data.bad} />
+          <StatisticLine text="Neutral" value={data.neutral} />
+          <StatisticLine text="All" value={all} />
+          <StatisticLine text="Average" value={average} />
+          <StatisticLine text="Positive" value={positivePortion} />
         </>
       ) : (
         "No Feedback given"
@@ -27,6 +27,7 @@ const Statistics = ({ data }) => {
     </div>
   );
 };
+const Button = ({ text, action }) => <button onClick={action}>{text}</button>;
 const FeedbackPanel = ({ data, action }) => {
   const addFeedback = (type) => {
     return () => {
@@ -38,9 +39,9 @@ const FeedbackPanel = ({ data, action }) => {
   return (
     <div>
       <Title text="Give Feedback" />
-      <button onClick={addFeedback("good")}>good</button>
-      <button onClick={addFeedback("bad")}>bad</button>
-      <button onClick={addFeedback("neutral")}>neutral</button>
+      <Button text="good" action={addFeedback("good")} />
+      <Button text="bad" action={addFeedback("bad")} />
+      <Button text="neutral" action={addFeedback("neutral")} />
     </div>
   );
 };
