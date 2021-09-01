@@ -3,7 +3,12 @@ import React, { useState } from "react";
 const baseFeedbackData = { good: 0, bad: 0, neutral: 0 };
 
 const Title = ({ text }) => <h1>{text}</h1>;
-const StatisticLine = ({ text, value }) => <p>{text + ": " + value}</p>;
+const StatisticLine = ({ text, value }) => (
+  <tr>
+    <td>{text}</td>
+    <td>{value}</td>
+  </tr>
+);
 const Statistics = ({ data }) => {
   const all = data.good + data.bad + data.neutral;
   const hasStats = Boolean(all);
@@ -13,14 +18,16 @@ const Statistics = ({ data }) => {
     <div>
       <Title text="Statitics" />
       {hasStats ? (
-        <>
-          <StatisticLine text="Good" value={data.good} />
-          <StatisticLine text="Bad" value={data.bad} />
-          <StatisticLine text="Neutral" value={data.neutral} />
-          <StatisticLine text="All" value={all} />
-          <StatisticLine text="Average" value={average} />
-          <StatisticLine text="Positive" value={positivePortion} />
-        </>
+        <table>
+          <tbody>
+            <StatisticLine text="Good" value={data.good} />
+            <StatisticLine text="Bad" value={data.bad} />
+            <StatisticLine text="Neutral" value={data.neutral} />
+            <StatisticLine text="All" value={all} />
+            <StatisticLine text="Average" value={average} />
+            <StatisticLine text="Positive" value={positivePortion + " %"} />
+          </tbody>
+        </table>
       ) : (
         "No Feedback given"
       )}
