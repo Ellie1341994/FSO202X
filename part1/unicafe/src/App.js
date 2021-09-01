@@ -6,17 +6,24 @@ const Title = ({ text }) => <h1>{text}</h1>;
 const Feedback = ({ type, value }) => <p>{type + ": " + value}</p>;
 const Statistics = ({ data }) => {
   const all = data.good + data.bad + data.neutral;
+  const hasStats = Boolean(all);
   const average = (data.good - data.bad) / (all || 1);
   const positivePortion = (100 * data.good) / (all || 1);
   return (
     <div>
       <Title text="Statitics" />
-      <Feedback type="Good" value={data.good} />
-      <Feedback type="Bad" value={data.bad} />
-      <Feedback type="Neutral" value={data.neutral} />
-      <Feedback type="All" value={all} />
-      <Feedback type="Average" value={average} />
-      <Feedback type="Positive" value={positivePortion} />
+      {hasStats ? (
+        <>
+          <Feedback type="Good" value={data.good} />
+          <Feedback type="Bad" value={data.bad} />
+          <Feedback type="Neutral" value={data.neutral} />
+          <Feedback type="All" value={all} />
+          <Feedback type="Average" value={average} />
+          <Feedback type="Positive" value={positivePortion} />
+        </>
+      ) : (
+        "No Feedback given"
+      )}
     </div>
   );
 };
