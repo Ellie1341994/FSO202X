@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+const Subtitle = ({ text }) => <h2>{text}</h2>;
 const App = () => {
   const anecdotes = [
     "If it hurts, do it more often",
@@ -13,14 +14,19 @@ const App = () => {
   const [selected, setSelected] = useState(0);
   const baseVotes = Array(anecdotes.length).fill(0);
   const [votes, setVotes] = useState(baseVotes);
+  const [mostVoted, setMostVoted] = useState(selected);
 
   return (
     <div>
+      <Subtitle text="Anecdote of the day" />
       <div>{anecdotes[selected]}</div>
       <button
         onClick={() => {
           votes[selected]++;
           setVotes([...votes]);
+          setMostVoted(
+            votes[mostVoted] < votes[selected] ? selected : mostVoted
+          );
         }}
       >
         Vote (Current:{votes[selected]})
@@ -32,6 +38,8 @@ const App = () => {
       >
         Random Anecdote
       </button>
+      <Subtitle text="Anecdote with most votes" />
+      <div>{anecdotes[mostVoted]}</div>
     </div>
   );
 };
