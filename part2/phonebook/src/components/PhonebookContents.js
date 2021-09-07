@@ -10,7 +10,11 @@ const PhonebookSearch = ({ value, setter }) => (
     />
   </label>
 );
-export const PhonebookContents = ({ content = [], searchInputProps }) => (
+export const PhonebookContents = ({
+  content = [],
+  searchInputProps,
+  deleteCallback,
+}) => (
   <>
     <Title text="Numbers" type="secondary" />
     <PhonebookSearch
@@ -21,8 +25,13 @@ export const PhonebookContents = ({ content = [], searchInputProps }) => (
       .filter(({ name }) =>
         name.toLowerCase().includes(searchInputProps.value.toLowerCase())
       )
-      .map(({ name, number }, index) => (
-        <h2 key={`${name}#${index}`}>{name + " " + number}</h2>
+      .map(({ name, number, id }, index) => (
+        <h2 key={`${name}#${index}`}>
+          {name + " " + number}
+          <button data-person-id={id} onClick={deleteCallback}>
+            X
+          </button>
+        </h2>
       ))}
   </>
 );

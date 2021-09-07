@@ -11,8 +11,9 @@ const App = () => {
   const [searchValue, setSearchValue] = useState("");
   useEffect(() => {
     personsService
-      .getAllPersons()
-      .then((response) => setPersons(response.data));
+      .getAll()
+      .then((response) => setPersons(response.data))
+      .catch((error) => console.log(error));
   }, []);
 
   const addPerson = (event) => {
@@ -21,8 +22,25 @@ const App = () => {
     if (persons.find((person) => person.name === newName)) {
       return alert(`${newName} is already added to phonebook`);
     }
-    personsService.addPerson(newPerson);
-    setPersons(persons.concat(newPerson));
+    personsService
+      .add(newPerson)
+      .then((response) => {
+        setPersons(persons.concat(response.data));
+      })
+      .catch(() => alert("Error occurred!"));
+  };
+  const deletePerson = async (event) => {
+    event.preventDefault();
+    const personToDeleteId = event.target.dataset.personId;
+    personsService
+      .del(personToDeleteId)
+      .then((response) => {
+        let updatedPersons = persons.filter((person) => {
+          return person.id.toString() !== personToDeleteId;
+        });
+        setPersons(updatedPersons);
+      })
+      .catch((error) => alert("Error occurred!"));
   };
   return (
     <div>
@@ -35,6 +53,7 @@ const App = () => {
       <PhonebookContents
         searchInputProps={{ value: searchValue, setter: setSearchValue }}
         content={persons}
+        deleteCallback={deletePerson}
       />
     </div>
   );
