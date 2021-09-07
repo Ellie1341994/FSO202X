@@ -16,12 +16,32 @@ const App = () => {
       .catch((error) => console.log(error));
   }, []);
 
-  const addPerson = (event) => {
+  const handleSubmitPerson = (event) => {
     event.preventDefault();
-    const newPerson = { name: newName, number: newNumber };
-    if (persons.find((person) => person.name === newName)) {
-      return alert(`${newName} is already added to phonebook`);
+    let personIndex = undefined;
+    const personFound = persons.find((person, index) => {
+      personIndex = index;
+      return person.name === newName;
+    });
+    if (personFound) {
+      const updatedPerson = { ...personFound, number: newNumber };
+      return updatePerson(updatedPerson, personIndex);
     }
+    const newPerson = { name: newName, number: newNumber };
+    return addPerson(newPerson);
+  };
+  const updatePerson = (person, personIndex) => {
+    personsService
+      .update(person.id, person)
+      .then((response) => {
+        persons[personIndex] = response.data;
+        const updatedPersons = [...persons];
+        setPersons(updatedPersons);
+      })
+      .catch((error) => alert("Error occurred!"));
+  };
+  const addPerson = (newPerson) => {
+    console.log(newPerson);
     personsService
       .add(newPerson)
       .then((response) => {
@@ -34,19 +54,19 @@ const App = () => {
     const personToDeleteId = event.target.dataset.personId;
     personsService
       .del(personToDeleteId)
-      .then((response) => {
+      .then((_response) => {
         let updatedPersons = persons.filter((person) => {
           return person.id.toString() !== personToDeleteId;
         });
         setPersons(updatedPersons);
       })
-      .catch((error) => alert("Error occurred!"));
+      .catch((_error) => alert("Error occurred!"));
   };
   return (
     <div>
       <Title />
       <PhonebookForm
-        submitCallback={addPerson}
+        submitCallback={handleSubmitPerson}
         numberInputProps={{ value: newNumber, setter: setNewNumber }}
         nameInputProps={{ value: newName, setter: setNewName }}
       />
