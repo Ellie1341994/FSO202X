@@ -2,11 +2,30 @@ import React, { useState, useEffect } from "react";
 import { Title } from "./components/Title";
 import { PhonebookForm } from "./components/PhonebookForm";
 import { PhonebookContents } from "./components/PhonebookContents";
+import { Notification } from "./components/Notification";
 import personsService from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
+  const [notify, setNotify] = useState({
+    status: false,
+    message: "",
+    type: "",
+  });
+  useEffect(() => {
+    if (notify.status) {
+      setTimeout(
+        () =>
+          setNotify({
+            status: false,
+            message: "",
+            type: "",
+          }),
+        2000
+      );
+    }
+  }, [notify]);
   const [newNumber, setNewNumber] = useState("");
   const [searchValue, setSearchValue] = useState("");
   useEffect(() => {
@@ -23,28 +42,41 @@ const App = () => {
       personIndex = index;
       return person.name === newName;
     });
+    const notifyCallback = () => {
+      const notify = {
+        status: true,
+        message: personFound
+          ? `Updated ${personFound.name} number`
+          : `Added ${newName}`,
+        type: personFound ? "update" : "add",
+      };
+      setNotify(notify);
+    };
     if (personFound) {
       const updatedPerson = { ...personFound, number: newNumber };
-      return updatePerson(updatedPerson, personIndex);
+      return updatePerson(updatedPerson, personIndex, notifyCallback);
+    } else {
+      const newPerson = { name: newName, number: newNumber };
+      return addPerson(newPerson, notifyCallback);
     }
-    const newPerson = { name: newName, number: newNumber };
-    return addPerson(newPerson);
   };
-  const updatePerson = (person, personIndex) => {
+  const updatePerson = (person, personIndex, callback) => {
     personsService
       .update(person.id, person)
       .then((response) => {
-        persons[personIndex] = response.data;
         const updatedPersons = [...persons];
+        updatedPersons[personIndex] = response.data;
+        callback();
         setPersons(updatedPersons);
       })
-      .catch((error) => alert("Error occurred!"));
+      .catch((_error) => alert("Error occurred!"));
   };
-  const addPerson = (newPerson) => {
+  const addPerson = (newPerson, callback) => {
     console.log(newPerson);
     personsService
       .add(newPerson)
       .then((response) => {
+        callback();
         setPersons(persons.concat(response.data));
       })
       .catch(() => alert("Error occurred!"));
@@ -69,6 +101,11 @@ const App = () => {
         submitCallback={handleSubmitPerson}
         numberInputProps={{ value: newNumber, setter: setNewNumber }}
         nameInputProps={{ value: newName, setter: setNewName }}
+      />
+      <Notification
+        type={notify.type}
+        display={notify.status}
+        text={notify.message}
       />
       <PhonebookContents
         searchInputProps={{ value: searchValue, setter: setSearchValue }}

@@ -17,7 +17,7 @@ export const PhonebookForm = ({
     <div>
       <NewPhoneBookEntryFormInput text="name" inputProps={nameInputProps} />
       <NewPhoneBookEntryFormInput text="number" inputProps={numberInputProps} />
-      <button type="submit">add</button>
+      <button type="submit">add or update</button>
     </div>
   </form>
 );
