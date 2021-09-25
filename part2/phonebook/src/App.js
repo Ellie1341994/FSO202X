@@ -42,13 +42,15 @@ const App = () => {
       personIndex = index;
       return person.name === newName;
     });
-    const notifyCallback = () => {
+    const notifyCallback = (error = false) => {
       const notify = {
         status: true,
-        message: personFound
+        message: error
+          ? `${personFound.name}'s information has alredy been deleted`
+          : personFound
           ? `Updated ${personFound.name} number`
           : `Added ${newName}`,
-        type: personFound ? "update" : "add",
+        type: error ? "error" : personFound ? "update" : "add",
       };
       setNotify(notify);
     };
@@ -61,15 +63,23 @@ const App = () => {
     }
   };
   const updatePerson = (person, personIndex, callback) => {
+    let updatedPersons = undefined;
     personsService
       .update(person.id, person)
       .then((response) => {
-        const updatedPersons = [...persons];
+        updatedPersons = [...persons];
         updatedPersons[personIndex] = response.data;
         callback();
-        setPersons(updatedPersons);
       })
-      .catch((_error) => alert("Error occurred!"));
+      .catch((_error) => {
+        updatedPersons = persons.filter((currentPerson) => {
+          return currentPerson.id !== person.id;
+        });
+        callback(true);
+      })
+      .finally(() => {
+        setPersons(updatedPersons);
+      });
   };
   const addPerson = (newPerson, callback) => {
     console.log(newPerson);
